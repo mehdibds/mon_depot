@@ -24,4 +24,4 @@ if __name__ == '__main__':
     simu=Simulation(team1,team2)
     
     #simulate and display the match
-    show_simu(simu)
+    
