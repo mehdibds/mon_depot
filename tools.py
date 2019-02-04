@@ -1,5 +1,5 @@
 # coding: utf-8
-from soccersimulator.utils import Vector2D, MobileMixin
+from soccersimulator import Vector2D, MobileMixin , SoccerAction
 from soccersimulator.settings import *
 """class RandomStrategy(Strategy):
     def __init__(self):
@@ -34,16 +34,21 @@ class SuperState():
     
     @property
     def go(self):
-            return SoccerAction(ball(self)-player(self))
+            return SoccerAction(self.ball -self.player)
     
     @property    
     def shoot(self):
-        if (distance(player(self),ball(self)) < PLAYER_RADIUS + BALL_RADIUS):
-            return SoccerAction(shoot=(goal(self)-player(self))/20)
+        if (self.player.distance(self.ball) < PLAYER_RADIUS + BALL_RADIUS):
+            return SoccerAction(shoot=((self.goal-self.player)/20)*maxPlayerShoot)
+        else:
+            return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
     
- 
+    def etat(self, x, y):
+        pos = Vector2D(x,y)
+        return SoccerAction(pos-self.player)
+        
     @property
-    def adv_proche(self):
+    def advproche(self):
         mini=GAME_WIDTH
         
         for el in self.state.players :
@@ -54,5 +59,25 @@ class SuperState():
                     mini = self.player.distance(self.state.player_state(equipe,joueur).position)
                     adverse = joueur
         return adverse
+    
+    @property
+    def eqproche(self):
+        mini=GAME_WIDTH
+        
+        for el in self.state.players :
+            equipe = el[0]
+            joueur = el[1]
+            if equipe == self.id_team :
+                if (self.player.distance(self.state.player_state(equipe,joueur).position)<mini):
+                    mini = self.player.distance(self.state.player_state(equipe,joueur).position)
+                    equipier = joueur
+        return equipier
+    
+    @property
+    def tirer(self):
+        return SoccerAction(shoot=(self.goal - self.ball).normalize()*maxPlayerShoot)
+    
+    def foncer_but(self):
+        return SoccerAction(shoot=(self.goal - self.ball).normalize())
     
     
