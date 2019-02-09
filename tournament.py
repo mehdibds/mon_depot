@@ -21,7 +21,5 @@ if __name__ == '__main__':
     team2=get_team(2)
     
     #Create a match
-    simu=Simulation(team1,team2)
-    
     #simulate and display the match
     
