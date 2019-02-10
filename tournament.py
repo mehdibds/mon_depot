@@ -5,7 +5,7 @@ from travail import *
 
 def get_team(nb_players):
     team = SoccerTeam(name="Lyna et Mehdi")
-    if nb_player == 1:
+    if nb_players == 1:
         team.add("Attaquant", Fonceur())
     if nb_players == 2 :
         team.add("Attaquant",Fonceur())
