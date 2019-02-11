@@ -6,9 +6,9 @@ from travail import *
 def get_team(nb_players):
     team = SoccerTeam(name="Lyna et Mehdi")
     if nb_players == 1:
-        team.add("Attaquant", Fonceur())
+        team.add("Attaquant", Attaquant())
     if nb_players == 2 :
-        team.add("Attaquant",Fonceur())
+        team.add("Attaquant",Attaquant())
         team.add("Defenseur",Defenseur())
         
         return team
