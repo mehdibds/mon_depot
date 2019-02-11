@@ -23,6 +23,13 @@ class SuperState():
     def player(self):
         return self.state.player_state(self.id_team,self.id_player).position
     
+    @property
+    def player_adverse(self):
+        if (self.id_team == 1):
+            return self.state.player_state(2,self.id_player).position
+        if (self.id_team == 2):
+            return self.state.player_state(1,self.id_player).position
+    
 	#position du goal
     @property
     def goal(self):
@@ -30,10 +37,11 @@ class SuperState():
             return Vector2D(GAME_WIDTH,GAME_HEIGHT /2)
         else :
             return Vector2D(0, GAME_HEIGHT/2)
-	#aller vers la balle
+
     @property
-    def go(self):
-            return SoccerAction(self.ball -self.player)
+    def distance_goal(self):
+        return self.goal.distance(self.player)
+    
     
 	#shooter dans la balle ou aller vers la balle
     @property    
@@ -58,7 +66,7 @@ class SuperState():
             if equipe != self.id_team :
                 if (self.player.distance(self.state.player_state(equipe,joueur).position)<mini):
                     mini = self.player.distance(self.state.player_state(equipe,joueur).position)
-                    adverse = joueur
+                    adverse = self.state.player_state(equipe,joueur).position
         return adverse
    
 	#trouver l'équipier le plus proche
@@ -73,11 +81,20 @@ class SuperState():
                     mini = self.player.distance(self.state.player_state(equipe,joueur).position)
                     equipier = self.state.player_state(equipe,joueur).position
         return equipier
-
+    
+    @property
+    def distance_eq_proche(self):
+        return self.eq_proche.distance(self.player)
 	#faire la passe à l'équipier le plus proche
     @property
     def passe(self):
-        return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
+        if (self.player.distance(self.ball) < PLAYER_RADIUS + BALL_RADIUS):
+            return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
+        else:
+            return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
+    	
+   
+    
 
     """@property
     def tirer(self):

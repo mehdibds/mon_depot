@@ -1,3 +1,6 @@
+from tools import *
+from travail import *
+
 # Create teams
 team1 = SoccerTeam(name="Team 1")
 team2 = SoccerTeam(name="Team 2")
@@ -5,7 +8,7 @@ team2 = SoccerTeam(name="Team 2")
 # Add players
 team1.add("Mbappe", Attaquant())
 team1.add("Kimpembe", Defenseur())
-team1.add("Angel Di Maria",Attaquant())
+
 
   # Random strategy
 team2.add("Dembele", Attaquant())
