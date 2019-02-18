@@ -7,12 +7,12 @@ team2 = SoccerTeam(name="Team 2")
 
 # Add players
 team1.add("Mbappe", Attaquant_Anticipe())
-#team1.add("Kimpembe", Defenseur())
+team1.add("Kimpembe", Defenseur())
 
 
   # Random strategy
 team2.add("Dembele", Attaquant())
-#team2.add("Mendy", Defenseur())
+team2.add("Mendy", Defenseur())
  #Static strategy
 
 # Create a match

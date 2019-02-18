@@ -6,7 +6,7 @@ def get_team(nb_players):
     if nb_players == 1:
         team.add("Attaquant", Attaquant())
     if nb_players == 2 :
-        team.add("Attaquant",Attaquant())
+        team.add("Attaquant",Attaquant_Anticipe())
         team.add("Defenseur",Defenseur())
     return team
     

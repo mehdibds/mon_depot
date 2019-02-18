@@ -69,7 +69,7 @@ class SuperState():
       #anticiper la position de la balle
     @property
     def ball_anticipe(self):
-        return self.state.ball.position+20*self.state.ball.vitesse
+        return self.state.ball.position+self.player.distance(self.ball)*self.state.ball.vitesse
     
     #aller vers la position anticipée de la balle
     @property
@@ -117,7 +117,7 @@ class SuperState():
     
      #position de l'adversaire le plus proche d'apres cours
     def adv_proche2(self):
-        opponents = [self.state.player_state(id_team, it_player).position
+        opponents = [self.state.player_state(id_team, id_player).position
                      for (id_team,id_player) in self.state.players
                      if id_team != self.id_team]
         return min ([(self.player.distance(player), player) for player in opponents])
@@ -126,24 +126,35 @@ class SuperState():
     @property
     def eq_proche(self):
         mini=GAME_WIDTH
-        for el in self.state.players :
-            equipe = el[0]
-            joueur = el[1]
-            if equipe == self.id_team :
-                if (self.player.distance(self.state.player_state(equipe,joueur).position)<mini):
-                    mini = self.player.distance(self.state.player_state(equipe,joueur).position)
-                    equipier = self.state.player_state(equipe,joueur).position
+        for (id_team, id_player) in self.state.players :
+            if id_team == self.id_team :
+                if (self.player.distance(self.state.player_state(id_team,id_player).position) < mini):
+                    mini = self.player.distance(self.state.player_state(id_team, id_player).position)
+                    equipier = self.state.player_state(id_team, id_player).position
         return equipier
+    
+    @property
+    def eq_proche2(self):
+        allies = [self.state.player_state(id_team, id_player).position
+                     for (id_team,id_player) in self.state.players
+                     if id_team == self.id_team]
+        return min([(self.player.distance(player),player) for player in allies])
+        
     
     #distance de l'equipier le plus proche
     @property
     def distance_eq_proche(self):
-        return self.eq_proche.distance(self.player)
+        return self.eq_proche2.distance(self.player)
+    
+    #distance de l'équipier le plus proche à la balle
+    @property
+    def distance_eq_ball(self):
+        return self.eq_proche.distance(self.ball)
     
 	#faire la passe à l'équipier le plus proche
     @property
     def passe(self):
-        if (self.player.distance(self.ball) < PLAYER_RADIUS + BALL_RADIUS):
+        if (self.can_shoot):
             return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
         else:
             return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
