@@ -4,7 +4,7 @@ from soccersimulator.settings import *
 from .tools import *
 
 
-class Attaquant(Strategy):
+class Shoot(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Attaquant")
         
@@ -14,10 +14,21 @@ class Attaquant(Strategy):
         s = SuperState(state, id_team, id_player)
         return s.shoot_or_go
    
+class Attaquanttlp(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "Attaquant")
+        
+    def compute_strategy(self, state, id_team, id_player):
+        # id_team is 1 or 2
+        # id_player starts at 0
+        s = SuperState(state, id_team, id_player)
+        if (s.player.distance(s.goal) < s.player.distance(s.eq_proche)):
+            return s.shoot_and_go
+        else :
+            return s.passe
     
     
-    
-class Attaquant_Anticipe(Strategy):
+class  Shoot_Anticipe(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Attaquant")
                
@@ -36,7 +47,7 @@ class Dribbler (Strategy):
         
     def compute_strategy(self, state, id_team, id_player):
         s = SuperState(state, id_team, id_player)
-        if (s.player_adverse.distance(s.player) < 50):    
+        if (s.player_adverse.distance(s.player) < 20):    
             if (s.can_shoot):
                 return SoccerAction(Vector2D(-GAME_WIDTH/2,GAME_GOAL_HEIGHT),Vector2D(-GAME_WIDTH/2,GAME_GOAL_HEIGHT))
             if (s.ball.x < 3*GAME_WIDTH/4):

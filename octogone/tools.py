@@ -100,56 +100,45 @@ class SuperState():
             return self.state.player_state(2,self.id_player).position
         if (self.id_team == 2):
             return self.state.player_state(1,self.id_player).position
+ 
+
     
+     #liste des adversaires
+    @property
+    def liste_adv(self):
+        return [self.state.player_state(id_team, id_team).position for (id_team, id_player) in self.state.players if id_team != self.id_team]
     
-    #position de l'adversaire le plus proche        
+    #position de l'adversaire le plus proche    
     @property
     def adv_proche(self):
-        mini=GAME_WIDTH
-        for el in self.state.players :
-            equipe = el[0]
-            joueur = el[1]
-            if equipe != self.id_team :
-                if (self.player.distance(self.state.player_state(equipe,joueur).position)<mini):
-                    mini = self.player.distance(self.state.player_state(equipe,joueur).position)
-                    adverse = self.state.player_state(equipe,joueur).position
-        return adverse
+        adversaire = self.liste_adv
+        mini = min ([(self.player.distance(player), player) for player in adversaire])
+        return mini[1]
     
-     #position de l'adversaire le plus proche d'apres cours
-    def adv_proche2(self):
-        opponents = [self.state.player_state(id_team, id_player).position
-                     for (id_team,id_player) in self.state.players
-                     if id_team != self.id_team]
-        return min ([(self.player.distance(player), player) for player in opponents])
+	#liste des equipiers
+    @property
+    def liste_eq(self):
+        return [self.state.player_state(id_team, id_team).position for (id_team, id_player) in self.state.players if id_team == self.id_team]
     
-	#position de l'équipier le plus proche
+    #position de l'equipier le plus proche
     @property
     def eq_proche(self):
-        mini=GAME_WIDTH
-        for (id_team, id_player) in self.state.players :
-            if id_team == self.id_team :
-                if (self.player.distance(self.state.player_state(id_team,id_player).position) < mini):
-                    mini = self.player.distance(self.state.player_state(id_team, id_player).position)
-                    equipier = self.state.player_state(id_team, id_player).position
-        return equipier
+        equipier = self.liste_eq
+        mini = min([(self.player.distance(player),player) for player in equipier])
+        return mini[1]
     
-    @property
-    def eq_proche2(self):
-        allies = [self.state.player_state(id_team, id_player).position
-                     for (id_team,id_player) in self.state.players
-                     if id_team == self.id_team]
-        return min([(self.player.distance(player),player) for player in allies])
-        
-    
-    #distance de l'equipier le plus proche
-    @property
-    def distance_eq_proche(self):
-        return self.eq_proche2.distance(self.player)
     
     #distance de l'équipier le plus proche à la balle
     @property
     def distance_eq_ball(self):
-        return self.eq_proche.distance(self.ball)
+        equipier = self.liste_eq
+        return min ([(player.distance(self.ball), player) for player in equipier])
+    
+     #distance de l'adversaire le plus proche à la balle
+    @property
+    def distance_adv_ball(self):
+        adversaire = self.liste_adv
+        return min ([(player.distance(self.ball), player) for player in adversaire])
     
 	#faire la passe à l'équipier le plus proche
     @property
