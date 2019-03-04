@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from octogone
- import *
+from octogone import *
 from soccersimulator import show_simu, Simulation
 
   

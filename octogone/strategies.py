@@ -64,17 +64,8 @@ class Defenseur(Strategy):
 
     def compute_strategy(self, state, id_team, id_player):
         s = SuperState(state,id_team,id_player)
-        if s.id_team == 1 and s.id_player == 1:
-            #si la balle se trouve dans le côté gauche
-            if (s.ball.x < GAME_WIDTH/2) :
-                return s.shoot_or_go
-            else :
-                return s.go_to_position(GAME_WIDTH/8, GAME_HEIGHT/2)
-        if s.id_team == 2 and s.id_player == 1 :
-            #si la balle se trouve dans le côté droit
-            if (s.ball.x > GAME_WIDTH/2) :
-               return s.shoot_or_go
-            else :
-                return s.go_to_position(7*GAME_WIDTH/8, GAME_HEIGHT/2)
-        
+        if s.nb_players == 2:
+            return s.defenseur_2
+        if s.nb_players == 4 :
+            return s.defenseur_4
 

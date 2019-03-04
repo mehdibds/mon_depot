@@ -56,7 +56,12 @@ class SuperState():
     @property
     def shoot(self):
         return SoccerAction(shoot=((self.goal-self.player)/20)*maxPlayerShoot)
-    
+
+    #shooter dans la baller
+    @property
+    def petit_shoot(self):
+        return SoccerAction(shoot=0.2*((self.goal-self.player)/20))
+
 	#shooter dans la balle ou aller vers la balle
     @property    
     def shoot_or_go(self):
@@ -65,11 +70,18 @@ class SuperState():
         else:
             return self.go 
         
-      
+      #shooter dans la balle ou aller vers la balle
+    @property    
+    def petit_shoot_or_go(self):
+        if (self.can_shoot):
+            return self.petit_shoot
+        else:
+            return self.go 
+        
       #anticiper la position de la balle
     @property
     def ball_anticipe(self):
-        return self.state.ball.position+self.player.distance(self.ball)*self.state.ball.vitesse
+        return self.state.ball.position+self.player.distance(self.ball)*0.5*self.state.ball.vitesse
     
     #aller vers la position anticipée de la balle
     @property
@@ -83,14 +95,6 @@ class SuperState():
             return self.shoot
         else:
             return self.go_anticipe
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     #position du joueur adverse (???)
@@ -118,7 +122,13 @@ class SuperState():
 	#liste des equipiers
     @property
     def liste_eq(self):
-        return [self.state.player_state(id_team, id_team).position for (id_team, id_player) in self.state.players if id_team == self.id_team]
+        return [self.state.player_state(id_team, id_player).position for (id_team, id_player) in self.state.players if id_team == self.id_team]
+    
+    #nombre de joueurs dans une équipe
+    @property
+    def nb_players(self):
+        return len(self.liste_eq)       
+    
     
     #position de l'equipier le plus proche
     @property
@@ -147,9 +157,53 @@ class SuperState():
             return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
         else:
             return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
-       
-
+   
+    @property
+    def defenseur_2(self): 
+        pos_x = GAME_WIDTH/15
+        pos_y = GAME_HEIGHT/2
+        if self.id_team == 1 and self.id_player == 1:
+            #si la balle se trouve dans le côté gauche
+            if (self.ball.x < GAME_WIDTH/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x,(pos_y+self.ball.y)/2)
+        if self.id_team == 2 and self.id_player == 1 :
+            #si la balle se trouve dans le côté droit
+            if (self.ball.x > GAME_WIDTH/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(14*pos_x, (pos_y+ self.ball.y)/2)
     
+    
+    #fonction de defense pour les classes à Deux ou Quatre joueurs
+    @property
+    def defenseur_4(self):
+        pos_x = GAME_WIDTH/15
+        pos_y = GAME_HEIGHT/4
+        if self.id_team == 1 and self.id_player == 2:
+            if (self.ball.x < GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x, pos_y)
+        #si la balle se trouve dans le côté gauche en bas
+        if self.id_team == 1 and self.id_player == 3 :
+            if (self.ball.x < GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x, 3*pos_y)
+        #si la balle se trouve dans le côté droit en haut
+        if self.id_team == 2 and self.id_player == 2:
+            if (self.ball.x > GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(14*pos_x, pos_y)
+        #si la balle se trouve dans le côté droit en bas
+        if self.id_team == 2 and self.id_player == 3 :
+            if (self.ball.x > GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(14*pos_x, 3*pos_y)
 
 
     
