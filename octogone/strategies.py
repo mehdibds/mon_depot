@@ -25,9 +25,7 @@ class Attaquanttlp(Strategy):
         if (s.player.distance(s.goal) < s.player.distance(s.eq_proche)):
             return s.shoot_and_go
         else :
-            return s.passe
-    
-    
+            return s.passe   
 class  Shoot_Anticipe(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Shoot_Anticipe")

@@ -9,7 +9,7 @@ team2 = SoccerTeam(name="Team 2")
 # Add players
 team1.add("Mbappe", Shoot_Anticipe())
 team1.add("Dembele", Shoot_Anticipe())
-team1.add("Varane", Defenseur())
+#team1.add("Varane", Defenseur())
 team1.add("Umtiti", Defenseur())
 
   # Random strategy

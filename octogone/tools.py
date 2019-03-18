@@ -25,7 +25,10 @@ class SuperState():
     @property
     def player(self):
         return self.state.player_state(self.id_team,self.id_player).position
-    
+   
+
+
+ 
 	#position du goal
     @property
     def goal(self):
