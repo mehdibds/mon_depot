@@ -6,7 +6,7 @@ from .tools import *
 
 class Shoot(Strategy):
     def __init__(self):
-        Strategy.__init__(self, "Attaquant")
+        Strategy.__init__(self, "Shoot")
         
     def compute_strategy(self, state, id_team, id_player):
         # id_team is 1 or 2
@@ -16,7 +16,7 @@ class Shoot(Strategy):
    
 class Attaquanttlp(Strategy):
     def __init__(self):
-        Strategy.__init__(self, "Attaquant")
+        Strategy.__init__(self, "Attaquanttlp")
         
     def compute_strategy(self, state, id_team, id_player):
         # id_team is 1 or 2
@@ -30,17 +30,18 @@ class Attaquanttlp(Strategy):
     
 class  Shoot_Anticipe(Strategy):
     def __init__(self):
-        Strategy.__init__(self, "Attaquant")
+        Strategy.__init__(self, "Shoot_Anticipe")
                
     def compute_strategy(self, state, id_team, id_player):
         # id_team is 1 or 2
         # id_player starts at 0
         s = SuperState(state, id_team, id_player)
-        return s.shoot_or_go_anticipe
-  
+        if s.passe_possible:
+            return s.passe
+        else :
+            return s.shoot_or_go_anticipe
 
-
-      
+   
 class Dribbler (Strategy):
     def __init__(self):
         Strategy.__init__(self, "Dribbler")

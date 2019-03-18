@@ -79,10 +79,6 @@ class SuperState():
             return self.petit_shoot
         else:
             return self.go 
-  
-class Anticipe(object) :
-    def __init__ (self, superstate):
-        self.superstate = superstate
         
       #anticiper la position de la balle
     @property
@@ -102,11 +98,6 @@ class Anticipe(object) :
         else:
             return self.go_anticipe
     
-   
-class Joueurs(objet) :
-    def __init__ (self, superstate):
-        self.superstate = superstate
-        
     #nombre de joueurs dans une équipe
     @property
     def nb_players(self):
@@ -132,7 +123,8 @@ class Joueurs(objet) :
     @property
     def eq_proche(self):
         equipier = self.liste_eq
-        return mini = min([(self.player.distance (player),player) for player in equipier])[1]
+        mini = min([(self.player.distance (player),player) for player in equipier])
+        return mini[1]
 
     #distance de l'équipier le plus proche à la balle
     @property
@@ -151,6 +143,15 @@ class Joueurs(objet) :
             return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
         else:
             return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
+    
+    #condition pour une passe
+    @property
+    def passe_possible(self):
+        if (self.eq_proche.distance(self.player)<self.player.distance(self.goal) and (self.eq_proche.distance(self.player))>30):
+            return True
+        else :
+            return False
+            
         
    #??????????     
     @property 
@@ -159,11 +160,7 @@ class Joueurs(objet) :
             return False 
         else : 
             return True
-        
-class Defenseur(object):
-    def __init__ (self, superstate):
-        self.superstate = superstate
-   
+
     #defenseur pour les équipes de 2 joueurs
     @property
     def defenseur_2(self): 

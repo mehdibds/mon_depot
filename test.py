@@ -1,5 +1,6 @@
 from octogone.tools import *
 from octogone.strategies import *
+from Nasser import *
 
 # Create teams
 team1 = SoccerTeam(name="Team 1")
@@ -12,10 +13,16 @@ team1.add("Varane", Defenseur())
 team1.add("Umtiti", Defenseur())
 
   # Random strategy
-team2.add("Kane", Shoot_Anticipe())
-team2.add("Sterling", Shoot_Anticipe())
-team2.add("Stones", Defenseur())
-team2.add("Rose", Defenseur())
+team2.add("Att",SimpleStrategy(attaquant2,'Att'))
+team2.add("Def",SimpleStrategy(defenseur2,'Def'))
+team2.add("Def",SimpleStrategy(defenseur2,'Def'))
+team2.add("Att",SimpleStrategy(attaquant2,'Att'))
+
+
+#team2.add("Kane", RandomStrategy())
+#team2.add("Sterling", RandomStrategy())
+#team2.add("Stones", Defenseur())
+#team2.add("Rose", Defenseur())
  #Static strategy
 
 # Create a match
