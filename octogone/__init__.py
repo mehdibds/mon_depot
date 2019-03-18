@@ -1,5 +1,5 @@
 from octogone.strategies import Shoot, Shoot_Anticipe, Dribbler, Defenseur
-from soccersimulator import SoccerTeam
+from Soccer.soccersimulator import SoccerTeam
 
 def get_team(nb_players):
 	team = SoccerTeam(name="Lyna et Mehdi")
