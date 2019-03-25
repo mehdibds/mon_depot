@@ -109,7 +109,7 @@ class SuperState():
      #liste des adversaires
     @property
     def liste_adv(self):
-        return [self.state.player_state(id_team, id_team).position for (id_team, id_player) in self.state.players if id_team != self.id_team]
+        return [self.state.player_state(id_team, id_player).position for (id_team, id_player) in self.state.players if id_team != self.id_team]
     
     #liste des equipiers
     @property
@@ -126,8 +126,7 @@ class SuperState():
     @property
     def eq_proche(self):
         equipier = self.liste_eq
-        mini = min([(self.player.distance (player),player) for player in equipier])
-        return mini[1]
+        return min([(self.player.distance (player), player) for player in equipier])[1]
 
     #distance de l'équipier le plus proche à la balle
     @property

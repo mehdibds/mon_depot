@@ -11,7 +11,7 @@ def get_team(nb_players):
 	if nb_players == 4 :
 		team.add("Mbappe",Shoot_Anticipe())
 		team.add("Umtiti",Defenseur())
-		team.add("Dembele",Shoot_Anticipe())
+		team.add("Dembele",Dribbler())
 		team.add("Varane",Defenseur())
 	return team
 	    
