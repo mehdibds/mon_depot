@@ -1,0 +1,43 @@
+﻿Question 1.1/
+
+Afin de renvoyer la balle à mon adversaire qui se trouve de l'autre côté du terrain, j’ai crée dans mon fichier strategies.py , une classe Echauffement. 
+Celle ci va indiquer au joueur d’aller frapper dans la ballon et de se déplacer.
+Les joueurs se déplacent ainsi et frappent juste quand ils sont en possession du ballon.
+
+
+Question 1.2/
+Ici on change de stratégie. On veut une stratégie offensive.
+J'ai ré-implémenté ma fonction petit_shoot_or_go qui va indiquer au joueur si il doit soit tirer soit se déplacer. Ma fonction s'appelle maintenant grand_shoot_or_go. Elle diffère de la précédente par son accélération qui est plus élevée.
+Mon principe est simple : 
+Tirer directement depuis le point de départ n'est pas une bonne idée. Je me fais donc la passe à moi même pour me rapprocher des filets et ensuite je tire.
+Il nous manque donc quelques défenseurs...
+
+
+
+Question 1.3/
+
+...et c'est justement ou j'aborde ce point.
+On doit maintenant adopter une stratégie défensive. Pour cela, je déclare(encore une fois) dans mon fichier une stratégie DefenseurVolley qui, selon le nombre de joueurs,va décider d'implémenter 2 ou 4 défenseurs!
+Mon principe est très simple.
+Le Défenseur va avoir deux rôles grâce à la fonction shoot_or_go_anticipe :
+
+ 
+	- Aller la ou la balle va aller (il va donc anticiper sa trajectoire)
+
+	- Se replacer derrière l'attaquant pour assurer ses arrières.
+
+Vous me demanderez alors : mais ou le défenseur doit il se replacer? C'est encore plus simple.
+Je décide de découper le terrain en 15(j'aurais pu le faire en 5 mais passons) , afin de pouvoir le diviser en 3 après : 
+
+	5/15 : C'est la partie derrière le filet à gauche ou le défenseur de gauche se placera
+	7.5/15 : Le milieu du terrain (non utilisé pour le moment)
+	10/15 : C'est la partie derrière le filet à droite ou le défenseur de droite se placera
+
+On a ainsi 4 joueurs: 
+Deux attaquants dans chacune des équipes et deux défenseurs également.
+	
+
+
+
+
+

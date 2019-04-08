@@ -60,12 +60,18 @@ class SuperState():
     #shooter dans la baller
     @property
     def shoot(self):
-        return SoccerAction(shoot=((self.goal-self.player))*22222222222)
+        return SoccerAction(shoot=((self.goal-self.player))*222222222222)
 
     #shooter dans la baller
     @property
     def petit_shoot(self):
-        return SoccerAction(shoot=0.2*((self.goal-self.player)/20))
+        return SoccerAction(shoot=0.4*((self.goal-self.player)/20))
+    
+    #shooter dans la baller
+    @property
+    def grand_shoot(self):
+        return SoccerAction(shoot=0.75*((self.goal-self.player)/20))
+    
 
 	#shooter dans la balle ou aller vers la balle
     @property    
@@ -83,6 +89,13 @@ class SuperState():
         else:
             return self.go 
         
+     #shooter fort dans la balle ou aller vers la ball 
+    @property
+    def grand_shoot_or_go(self):
+        if (self.can_shoot):
+            return self.grand_shoot
+        else:
+            return self.go 
       #anticiper la position de la balle
     @property
     def ball_anticipe(self):
@@ -181,6 +194,23 @@ class SuperState():
             else :
                 return self.go_to_position(14*pos_x, (pos_y+ self.ball.y)/2)
     
+    #pareil mais pour le volley
+    @property
+    def defenseur_2_volley(self): 
+        pos_x = GAME_WIDTH/15
+        pos_y = GAME_HEIGHT/2
+        if self.id_team == 1 and self.id_player == 1:
+            #si la balle se trouve dans le côté gauche
+            if (self.ball.x < GAME_WIDTH/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x*5,(pos_y+self.ball.y)/2)
+        if self.id_team == 2 and self.id_player == 1 :
+            #si la balle se trouve dans le côté droit
+            if (self.ball.x > GAME_WIDTH/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(10*pos_x, (pos_y+ self.ball.y)/2)
     
     #defenseur pour les équipes de 4 joueurs
     @property
@@ -212,6 +242,36 @@ class SuperState():
             else :
                 return self.go_to_position(14*pos_x, 3*pos_y)
 
+
+    #pareil mais pour le volley
+    @property
+    def defenseur_4_volley(self):
+        pos_x = GAME_WIDTH/15
+        pos_y = GAME_HEIGHT/4
+        #la balle se trouve dans le côté gauche en haut
+        if self.id_team == 1 and self.id_player == 2:
+            if (self.ball.x < GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x, pos_y)
+        #la balle se trouve dans le côté gauche en bas
+        if self.id_team == 1 and self.id_player == 3 :
+            if (self.ball.x < GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(pos_x, 3*pos_y)
+        #la balle se trouve dans le côté droit en haut
+        if self.id_team == 2 and self.id_player == 2:
+            if (self.ball.x > GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(14*pos_x, pos_y)
+        #la balle se trouve dans le côté droit en bas
+        if self.id_team == 2 and self.id_player == 3 :
+            if (self.ball.x > GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
+                return self.shoot_or_go_anticipe
+            else :
+                return self.go_to_position(14*pos_x, 3*pos_y)
 
 
     

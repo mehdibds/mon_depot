@@ -69,6 +69,17 @@ class Defenseur(Strategy):
         if s.nb_players == 4 :
             return s.defenseur_4
 
+class DefenseurVolley(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "Defenseur")
+
+    def compute_strategy(self, state, id_team, id_player):
+        s = SuperState(state,id_team,id_player)
+        if s.nb_players == 2:
+            return s.defenseur_2_volley
+        if s.nb_players == 4 :
+            return s.defenseur_4_volley
+
 class Echauffement(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Echauffement")
@@ -91,5 +102,4 @@ class Attaque(Strategy):
 
     def compute_strategy(self, state, id_team, id_player):
         s = SuperState(state, id_team, id_player)
-        return s.petit_shoot_or_go
-        
+        return s.grand_shoot_or_go
