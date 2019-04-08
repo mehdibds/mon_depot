@@ -9,8 +9,8 @@ team1 = SoccerTeam(name="Team 1")
 team2 = SoccerTeam(name="Team 2")
 
 # Add players
-team1.add("Player 1", Echauffement())  # Random strategy
-team2.add("Player 2", Echauffement())   # Random strategy
+team1.add("Player 1", Attaque())  # Random strategy
+team2.add("Player 2", Attaque())   # Random strategy
 
 # Create a match
 simu = VolleySimulation(team1, team2)

@@ -60,7 +60,7 @@ class SuperState():
     #shooter dans la baller
     @property
     def shoot(self):
-        return SoccerAction(shoot=((self.goal-self.player)/20)*maxPlayerShoot)
+        return SoccerAction(shoot=((self.goal-self.player))*22222222222)
 
     #shooter dans la baller
     @property

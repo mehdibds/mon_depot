@@ -69,3 +69,27 @@ class Defenseur(Strategy):
         if s.nb_players == 4 :
             return s.defenseur_4
 
+class Echauffement(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "Echauffement")
+
+    def compute_strategy(self, state, id_team, id_player):
+        s = SuperState(state, id_team, id_player)
+        return s.shoot_or_go
+
+class RandomStrategy(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "RandomStrategy")
+
+    def compute_strategy(self, state, id_team, id_player):
+        return SoccerAction(acceleration=Vector2D.create_random(-1, 1),
+                            shoot=Vector2D.create_random(-1, 1))
+        
+class Attaque(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "Echauffement")
+
+    def compute_strategy(self, state, id_team, id_player):
+        s = SuperState(state, id_team, id_player)
+        return s.petit_shoot_or_go
+        
