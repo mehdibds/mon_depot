@@ -103,3 +103,24 @@ class Attaque(Strategy):
     def compute_strategy(self, state, id_team, id_player):
         s = SuperState(state, id_team, id_player)
         return s.grand_shoot_or_go
+    
+    
+class un_vs_un(Strategy):
+    def __init__(self):
+        Strategy.__init__(self, "1VS1")
+
+    def compute_strategy(self, state, id_team, id_player):
+        s = SuperState(state,id_team,id_player)
+        if s.nb_players != 2:
+            return None
+        if s.id_team == 1 and s.id_player == 1:
+            if s.player - s.goal > 30 : 
+                return s.grand_shoot_or_go
+            else : 
+                return s.defenseur_2_volley
+        if s.id_team == 2 and s.id_player == 2 :
+            if s.player - s.goal > 30 :
+                return s.shoot_or_go_anticipe
+            else :
+                return s.defenseur_2_volley
+            

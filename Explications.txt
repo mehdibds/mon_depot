@@ -37,7 +37,23 @@ On a ainsi 4 joueurs:
 Deux attaquants dans chacune des équipes et deux défenseurs également.
 	
 
+Question 1.4/
+
+On a défini plusieurs stratégies au cours de cette séance.
+Ce que j'aimerais faire ici, faute de l'avoir fait avec Decorator, suit un principe logique: 
+
+On va observer la position du joueur, qui va être cruciale.
+Par exemple si le joueur se trouve à une distance assez proche du filet, on va lui ordonner d'agir comme un attaquant et adoptera le comportement de la classe Attaque()
+A l'inverse, si le joueur ne se trouve pas à une distance assez proche du filet, on va lui ordonner d'aller défendre et il adoptera le comportement de la classe Defenseur()
 
 
 
+Question 1.5/
 
+Je vais décider d'implémenter une stratégie dans un premier temps pour démontrer l'importance des défenseurs. 
+J'implémente donc une équipe avec un attaquant et défenseur dans un premier temps et une équipe composée 
+de deux attaquants.
+Le résultat est sans appel , on voit clairement sur la simulation que l'équipe 1 à une délégation des taĉhes plus organisée et chaque joueur va à son poste avec une fonction bien précise. 
+L'équipe 2 elle, fonce juste sur le ballon et perd de cruciales secondes à chaque fois quand la balle part loin de leur côté, ce qui laisse un petit temps important pour que l'équipe 1 se replace.
+
+Dans un second temps j'ai refait une stratégie composée de 2 joueurs attaquants dans chaque équipe sans défenseurs.On voit bien dans cette simulation que ce manque de défenseur est bien remarqué et que les joueurs foncent juste vers la balle sans défendre leur filet.
