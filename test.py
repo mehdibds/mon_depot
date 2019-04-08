@@ -17,7 +17,7 @@ team1.add("KB9",Shoot())
 #team2.add("Kane", Shoot())
 #team2.add("Sterling", Shoot())
 #team2.add("Stones", Defenseur())
-#t<eam2.add("Rose", Defenseur())
+#team2.add("Rose", Defenseur())
  
 #Static strategy
 

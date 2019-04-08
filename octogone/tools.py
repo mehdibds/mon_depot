@@ -149,11 +149,21 @@ class SuperState():
     #condition pour une passe
     @property
     def passe_possible(self):
+        if ((self.adv_proche-self.player).angle == (self.eq_proche-self.player).angle :
+            return False
         if (self.eq_proche.distance(self.player)<self.player.distance(self.goal) and (self.eq_proche.distance(self.player))>30):
+            if ((self.adv_proche-self.player).angle == (self.goal - self.player).angle):
             return True
-        else :
+        else :  
             return False
             
+    #joueur qui a la balle
+    @property
+    def qui_a_la_balle(self):
+        joueurs = self.liste_eq+self.liste_adv
+        return min([(self.ball.distance (player), player) for player in joueurs])[1]
+    
+    
         
    #??????????     
     @property 
@@ -180,6 +190,8 @@ class SuperState():
                 return self.shoot_or_go_anticipe
             else :
                 return self.go_to_position(14*pos_x, (pos_y+ self.ball.y)/2)
+            
+
     
     
     #defenseur pour les équipes de 4 joueurs

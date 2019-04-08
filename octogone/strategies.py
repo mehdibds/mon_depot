@@ -13,22 +13,20 @@ class Shoot(Strategy):
         # id_player starts at 0
         s = SuperState(state, id_team, id_player)
         return s.shoot_or_go
-    
-"""class Attaquant (Strategy):
-    def __init__ (self): 
-         Strategy.__init__(self, "Shoot")
-         
-    def compute_strategy(self, state, id_team, id_player):"""
-         
-class PetitShoot(Strategy):
+
+class Attaquant(Strategy):
     def __init__(self):
-        Strategy.__init__(self, "Shoot")
-        
+        Strategy.__init__(self, "Attaquant")
+    
     def compute_strategy(self, state, id_team, id_player):
-        # id_team is 1 or 2
-        # id_player starts at 0
-        s = SuperState(state, id_team, id_player)
-        return s.petit_shoot_or_go
+        s=SuperState(self, state, id_team, id_player)
+        if s.player == s.qui_a_la_balle :
+            if s.passe_possible :
+                return s.passe
+            else :
+                return s.petit_shoot
+            
+
    
 class Attaquanttlp(Strategy):
     def __init__(self):
