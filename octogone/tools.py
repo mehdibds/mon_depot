@@ -1,5 +1,5 @@
 # coding: utf-8
-from soccersimulator import Vector2D, MobileMixin , SoccerAction
+from soccersimulator import Vector2D, MobileMixin , SoccerAction, Strategy
 from soccersimulator.settings import *
 
 class SuperState():
@@ -10,25 +10,7 @@ class SuperState():
         
     def __getattr__ (self , attr):
         return getattr (self.state , attr)
-   
-    #positon de la balle     
-    @property
-    def ball(self):
-        return self.state.ball.position
-
-     #vitesse de la balle  
-    @property
-    def vitesse_ball(self):
-        return self.state.ball.position
     
-	#position du joueur
-    @property
-    def player(self):
-        return self.state.player_state(self.id_team,self.id_player).position
-   
-
-
- 
 	#position du goal
     @property
     def goal(self):
@@ -36,195 +18,132 @@ class SuperState():
             return Vector2D(GAME_WIDTH,GAME_HEIGHT /2)
         else :
             return Vector2D(0, GAME_HEIGHT/2)
-
-    #distance au goal
-    @property
-    def distance_goal(self):
-        return self.goal.distance(self.player)
-    
-    #aller à un point donné
-    def go_to_position(self, x, y):
-        pos = Vector2D(x,y)
-        return SoccerAction(pos-self.player)
-    
-    #retourne vrai si le joueur peut shoot, faux sinon
-    @property
-    def can_shoot(self):
-        return self.ball.distance(self.player) < PLAYER_RADIUS+BALL_RADIUS
-    
-    #aller vers la balle
-    @property
-    def go (self):
-        return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)   
-
-    #shooter dans la baller
-    @property
-    def shoot(self):
-        return SoccerAction(shoot=((self.goal-self.player)/20)*maxPlayerShoot)
-
-    #shooter dans la baller
-    @property
-    def petit_shoot(self):
-        return SoccerAction(shoot=0.2*((self.goal-self.player)/20))
-
-	#shooter dans la balle ou aller vers la balle
-    @property    
-    def shoot_or_go(self):
-        if (self.can_shoot):
-            return self.shoot
-        else:
-            return self.go 
         
-      #shooter dans la balle ou aller vers la balle
-    @property    
-    def petit_shoot_or_go(self):
-        if (self.can_shoot):
-            return self.petit_shoot
-        else:
-            return self.go 
-        
-      #anticiper la position de la balle
+	#position du joueur
+    @property
+    def player(self):
+        return self.state.player_state(self.id_team,self.id_player).position
+    
+   #position de l'autre joueur
+    @property
+    def player_pos(self, numero):
+        if numero == 2 :
+            return self.state.player_state(self.id_team, 2).position
+        if numero == 3 :
+            return self.state.player_state(self.id_team, 3).position
+        if numero == 4 :
+            return self.state.player_state(self.id_team, 4).position
+   
+    #positon de la balle     
+    @property
+    def ball(self):
+        return self.state.ball.position
+    
+    #anticiper la position de la balle
     @property
     def ball_anticipe(self):
         return self.state.ball.position+self.player.distance(self.ball)*0.5*self.state.ball.vitesse
     
-    #aller vers la position anticipée de la balle
+    #donne la position d'un adversaire proche
     @property
-    def go_anticipe (self):
-        return SoccerAction((self.ball_anticipe-self.player)*maxPlayerAcceleration) 
+    def adversaire_proche(self):
+        opponents = [self.state.player_state(id_team, id_player).position for (id_team, id_player) in self.state.players if (id_team!=self.id_team)]
+        return min ([(self.player.distance(player), player) for player in opponents])[1]
     
-    #shooter dans la balle ou aller vers la position anticipée de la balle
-    @property    
-    def shoot_or_go_anticipe(self):
-        if (self.can_shoot):
-            return self.shoot
-        else:
-            return self.go_anticipe
-    
-    #nombre de joueurs dans une équipe
+    #donne la position de l'équipier proche
     @property
-    def nb_players(self):
-        return len(self.liste_eq)  
-       
-     #liste des adversaires
-    @property
-    def liste_adv(self):
-        return [self.state.player_state(id_team, id_player).position for (id_team, id_player) in self.state.players if id_team != self.id_team]
-    
-    #liste des equipiers
-    @property
-    def liste_eq(self):
-        return [self.state.player_state(id_team, id_player).position for (id_team, id_player) in self.state.players if id_team == self.id_team]
-    
-    #adversaire le plus proche    
-    @property
-    def adv_proche(self):
-        adversaire = self.liste_adv
-        return min([(self.player.distance (player), player) for player in adversaire])[1]
-    
-    #equipier le plus proche
-    @property
-    def eq_proche(self):
-        equipier = self.liste_eq
-        return min([(self.player.distance (player), player) for player in equipier])[1]
+    def equipier_proche(self):
+        if self.id_player == 0:
+            return self.state.player_state(self.id_team, 1).position
+        if self.id_player == 1 :
+            return self.state.player_state(self.id_team, 0).position
+        if self.id_player == 3:
+            return self.state.player_state(self.id_team, 2).position
+        if self.id_player == 2 :
+            return self.state.player_state(self.id_team, 3).position
 
-    #distance de l'équipier le plus proche à la balle
-    @property
-    def distance_eq_ball(self):
-        return self.eq_proche.distance(self.ball)
     
-     #distance de l'adversaire le plus proche à la balle
-    @property
-    def distance_adv_ball(self):
-        return self.adv_proche.distance(self.ball)
-    
-	#faire la passe à l'équipier le plus proche
-    @property
-    def passe(self):
-        if (self.can_shoot):
-            return SoccerAction(shoot=((self.eq_proche-self.player)/20)*maxPlayerShoot)
-        else:
-            return SoccerAction((self.ball-self.player)*maxPlayerAcceleration)
-    
-    #condition pour une passe
+    #pose les conditions d'une passe 
     @property
     def passe_possible(self):
-        if ((self.adv_proche-self.player).angle == (self.eq_proche-self.player).angle :
-            return False
-        if (self.eq_proche.distance(self.player)<self.player.distance(self.goal) and (self.eq_proche.distance(self.player))>30):
-            if ((self.adv_proche-self.player).angle == (self.goal - self.player).angle):
+        if (self.equipier_proche.distance(self.player)<self.player.distance(self.goal) and (self.equipier_proche.distance(self.player))>10):
             return True
-        else :  
-            return False
-            
-    #joueur qui a la balle
+        return False
+    
+    #retourne True si on se trouve dans la zone de tir, False sinon
     @property
-    def qui_a_la_balle(self):
-        joueurs = self.liste_eq+self.liste_adv
-        return min([(self.ball.distance (player), player) for player in joueurs])[1]
-    
-    
+    def zone_tir(self):
+        if (self.id_team == 1):
+            if (self.player.x > 3*GAME_WIDTH/4) and (self.player.y > GAME_HEIGHT/4) and (self.player.y < 3*GAME_HEIGHT/4):
+                return True
+            return False
+        if (self.id_team ==2):
+            if (self.player.x < GAME_WIDTH/4) and (self.player.y > GAME_HEIGHT/4) and (self.player.y < 3*GAME_HEIGHT/4):
+                return True
+            return False
         
-   #??????????     
-    @property 
-    def move(self) : 
-        if self.goal.distance(self.adv_proche)<20:
-            return False 
-        else : 
-            return True
+    
 
-    #defenseur pour les équipes de 2 joueurs
-    @property
-    def defenseur_2(self): 
-        pos_x = GAME_WIDTH/15
-        pos_y = GAME_HEIGHT/2
-        if self.id_team == 1 and self.id_player == 1:
-            #si la balle se trouve dans le côté gauche
-            if (self.ball.x < GAME_WIDTH/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(pos_x,(pos_y+self.ball.y)/2)
-        if self.id_team == 2 and self.id_player == 1 :
-            #si la balle se trouve dans le côté droit
-            if (self.ball.x > GAME_WIDTH/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(14*pos_x, (pos_y+ self.ball.y)/2)
-            
+"""class SimpleStrategy (Strategy):
+    def __init__ (self, action, name):
+        super().__init__(name)
+        self.action = action
 
+    def compute_strategy (self, state ,id_team ,id_player):
+        s = SuperState (state, id_team, id_player)
+        return self.action(s)  """
+
+
+
+
+class Move(): 
+    def __init__(self, superstate):
+        self.superstate = superstate
+    
+    def move(self, acceleration=None):
+        return SoccerAction(acceleration=acceleration)
+    
+    #court vers la balle
+    def to_ball(self):
+        return self.move(self.superstate.ball-self.superstate.player)
+    
+    def to_goal (self):
+        return self.move(self.superstate.goal-self.superstate.player)
     
     
-    #defenseur pour les équipes de 4 joueurs
-    @property
-    def defenseur_4(self):
-        pos_x = GAME_WIDTH/15
-        pos_y = GAME_HEIGHT/4
-        #la balle se trouve dans le côté gauche en haut
-        if self.id_team == 1 and self.id_player == 2:
-            if (self.ball.x < GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(pos_x, pos_y)
-        #la balle se trouve dans le côté gauche en bas
-        if self.id_team == 1 and self.id_player == 3 :
-            if (self.ball.x < GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(pos_x, 3*pos_y)
-        #la balle se trouve dans le côté droit en haut
-        if self.id_team == 2 and self.id_player == 2:
-            if (self.ball.x > GAME_WIDTH/2 and self.ball.y < GAME_HEIGHT/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(14*pos_x, pos_y)
-        #la balle se trouve dans le côté droit en bas
-        if self.id_team == 2 and self.id_player == 3 :
-            if (self.ball.x > GAME_WIDTH/2 and self.ball.y > GAME_HEIGHT/2) :
-                return self.shoot_or_go_anticipe
-            else :
-                return self.go_to_position(14*pos_x, 3*pos_y)
+    def to_ball_anticipe(self, strength=None):
+        return self.move((self.superstate.ball_anticipe-self.superstate.player)*maxPlayerAcceleration)
+    
+    #court vers l'equipier proche
+    def to_player(self):
+        if self.id_team == 2:
+            return self.move((self.state.player_state(1, self.id_player).position)*maxPlayerAcceleration)
+        if self.id_team == 1 :
+            return self.move((self.state.player_state(2, self.id_player).position)*maxPlayerAcceleration)
+        
+    #aller à un point donné
+    def to_position(self, x, y):
+        pos = Vector2D(x,y)
+        return self.move(pos-self.superstate.player)
+    
+class Shoot():
+    def __init__(self, superstate):
+        self.superstate = superstate
+        
+    def shoot(self, direction=None):
+            dist = self.superstate.player.distance(self.superstate.ball)
+            if dist < PLAYER_RADIUS + BALL_RADIUS:
+                return SoccerAction(shoot=direction)
+            else:
+                return SoccerAction()
 
-
+    def to_goal(self, strength=None):
+        return self.shoot((self.superstate.goal-self.superstate.player)*maxPlayerShoot)
+    
+    def dribble(self, strength=None):
+        return self.shoot((self.superstate.goal-self.superstate.player)*maxPlayerAcceleration/10)
+    
+    def passe(self, strength=None):
+        return self.shoot((self.superstate.equipier_proche-self.superstate.player)*maxPlayerShoot)
 
     
-	
