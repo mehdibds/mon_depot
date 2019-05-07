@@ -116,10 +116,10 @@ class Move():
     
     #court vers l'equipier proche
     def to_player(self):
-        if self.id_team == 2:
-            return self.move((self.state.player_state(1, self.id_player).position)*maxPlayerAcceleration)
-        if self.id_team == 1 :
-            return self.move((self.state.player_state(2, self.id_player).position)*maxPlayerAcceleration)
+        if self.superstate.id_team == 2:
+            return self.move((self.superstate.state.player_state(1, self.superstate.id_player).position)*maxPlayerAcceleration)
+        if self.superstate.id_team == 1 :
+            return self.move((self.superstate.state.player_state(2, self.superstate.id_player).position)*maxPlayerAcceleration)
         
     #aller à un point donné
     def to_position(self, x, y):

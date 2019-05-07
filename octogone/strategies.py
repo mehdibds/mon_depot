@@ -86,9 +86,11 @@ class Attaquant(Strategy):
                 if (s.id_player == 0):
                     return move.to_ball()+shoot.dribble()
                 if (s.id_player == 1):
+                    if (s.player.distance(s.ball)<s.equipier_proche.distance(s.ball)):
+                        return move.to_ball()+shoot.to_goal()
                     return move.to_goal()
 
-class Defenseur(Strategy):
+"""class Defenseur(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Defenseur")
         
@@ -102,10 +104,10 @@ class Defenseur(Strategy):
             if s.passe_possible == True :
                 return move.to_ball()+shoot.passe()
             else :
-                return move.to_player()+shoot.to_goal()
+                
+                return move.to_player()+shoot.to_goal()"""
 
-
-class Defense(Strategy):
+class Defenseur(Strategy):
     def __init__(self):
         Strategy.__init__(self, "Defenseur")
 
@@ -113,48 +115,32 @@ class Defense(Strategy):
         s = SuperState(state,id_team,id_player)
         move = Move(s)
         shoot = Shoot(s)
-        if s.nb_players == 2:
-            pos_x = GAME_WIDTH/15
-            pos_y = GAME_HEIGHT/2
-            if s.id_team == 1 and s.id_player == 1:
-                #si la balle se trouve dans le côté gauche
-                if (s.ball.x < GAME_WIDTH/2) :
-                    return move.to_ball()+shoot.to_goal()
-                else :
-                    return move.to_position(pos_x,s.ball.y)
-                if s.id_team == 2 and s.id_player == 1 :
-                    #si la balle se trouve dans le côté droit
-                    if (s.ball.x > GAME_WIDTH/2) :
-                        return move.to_ball()+shoot.to_goal()
-                    else :
-                        return move.to_position(14*pos_x, (pos_y+ s.ball.y)/2)
-        if s.nb_players == 4 :
-            pos_x = GAME_WIDTH/15
-            pos_y = GAME_HEIGHT/4
+        pos_x = GAME_WIDTH/15
+        pos_y = GAME_HEIGHT/4
             #la balle se trouve dans le côté gauche en haut
-            if s.id_team == 1 and s.id_player == 2:
-                if (s.ball.x < GAME_WIDTH/2 and s.ball.y < GAME_HEIGHT/2) :
-                    return move.to_ball()+shoot.to_goal()
-                else :
-                    return move.to_position(pos_x, pos_y)
+        if s.id_team == 1 and s.id_player == 2:
+            if (s.ball.x < GAME_WIDTH/2 and s.ball.y < GAME_HEIGHT/2) :
+                return move.to_ball()+shoot.to_goal()
+            else :
+                return move.to_position(pos_x, pos_y)
             #la balle se trouve dans le côté gauche en bas
-            if s.id_team == 1 and s.id_player == 3 :
-                if (s.ball.x < GAME_WIDTH/2 and s.ball.y > GAME_HEIGHT/2) :
-                    return move.to_ball()+shoot.to_goal()
-                else :
-                    return move.to_position(pos_x, 3*pos_y)
+        if s.id_team == 1 and s.id_player == 3 :
+            if (s.ball.x < GAME_WIDTH/2 and s.ball.y > GAME_HEIGHT/2) :
+                return move.to_ball()+shoot.to_goal()
+            else :
+                return move.to_position(pos_x, 3*pos_y)
             #la balle se trouve dans le côté droit en haut
-            if s.id_team == 2 and s.id_player == 2:
-                if (s.ball.x > GAME_WIDTH/2 and s.ball.y < GAME_HEIGHT/2) :
-                    return move.to_ball()+shoot.to_goal()
-                else :
-                    return move.to_position(14*pos_x, pos_y)
+        if s.id_team == 2 and s.id_player == 2:
+            if (s.ball.x > GAME_WIDTH/2 and s.ball.y < GAME_HEIGHT/2) :
+                return move.to_ball()+shoot.to_goal()
+            else :
+                return move.to_position(14*pos_x, pos_y)
             #la balle se trouve dans le côté droit en bas
-            if s.id_team == 2 and s.id_player == 3 :
-                if (s.ball.x > GAME_WIDTH/2 and s.ball.y > GAME_HEIGHT/2) :
-                    return move.to_ball()+shoot.to_goal()
-                else :
-                    return move.to_position(14*pos_x, 3*pos_y)    
+        if s.id_team == 2 and s.id_player == 3 :
+            if (s.ball.x > GAME_WIDTH/2 and s.ball.y > GAME_HEIGHT/2) :
+                return move.to_ball()+shoot.to_goal()
+            else :
+                return move.to_position(14*pos_x, 3*pos_y) 
                             
                             
                             
